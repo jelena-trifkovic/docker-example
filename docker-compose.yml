@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  # Express App
+  app:
+    container_name: docker-example-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+      - DATABASE_URL=${DATABASE_URL:-postgres://admin:password@db:5432/docker-example-db}
+
+  # PostgresSQL Database
+  db:
+    container_name: postgres-db
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-docker-example-db}
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
